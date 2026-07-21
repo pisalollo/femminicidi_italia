@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Tassi ogni 100.000 - Maschi e Femmine</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  body {
+    background: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 32px;
+    color: #222;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+  .chart-container {
+    max-width: 900px;
+    margin: 0 auto 48px auto;
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  .chart-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  canvas {
+    background: #ffffff;
+  }
+</style>
+</head>
+<body>
+
+<h1>Tassi per 100.000 abitanti</h1>
+<div class="subtitle">Confronto tra tasso partner/ex partner e tasso intimo familiare (2002–2025)</div>
+
+<div class="chart-container">
+  <div class="chart-title" style="color:#1565c0;">Maschi</div>
+  <canvas id="chartMaschi" height="120"></canvas>
+</div>
+
+<div class="chart-container">
+  <div class="chart-title" style="color:#c2185b;">Femmine</div>
+  <canvas id="chartFemmine" height="120"></canvas>
+</div>
+
+<script>
+const anni = [2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025];
+
+const maschiPartner = [0.0361825021528136,0.0611612356418828,0.0928040672167723,0.0744963501311428,0.0388657895564832,0.0597128175266392,0.0767008910691156,0.0554743838191485,0.0483443309779975,0.0344203414855847,0.0274516719320689,0.0273806537199527,0.0376262385959147,0.0342340547059167,0.0239842260542087,0.0274277299458167,0.0171562888504161,0.0378128426198037,0.0172662898034167,0.0277367591559302,0.0277930663768776,0.0208095345957992,0.0346668668661588,0.0313532659004012];
+const maschiIntimo = [0.133875257965411,0.169092827951088,0.182038747232899,0.198656933683048,0.194328947782416,0.224801195394406,0.219643460788831,0.176824598423535,0.203736823407276,0.20308001476495,0.157847113609396,0.147171013744746,0.218916297285322,0.164323462588401,0.137052720309764,0.126853250999402,0.133819053033245,0.195939275393528,0.151943350270067,0.13521670088516,0.12159466539884,0.159539765234461,0.197601141137105,0.149798937079695];
+
+const femminePartner = [0.244464280381787,0.26685762863454,0.241512143758896,0.18013581339651,0.302352351130092,0.211314243347667,0.216192613861239,0.270241116612851,0.200904208274023,0.264736005094296,0.238332005759647,0.244420907854508,0.260569226664956,0.225668684520821,0.245721106414892,0.175127429528236,0.237526684740169,0.221943451093374,0.219811300528487,0.231094932411665,0.202279675361017,0.21,0.20568103124231,0.205042345808255];
+const femmineIntimo = [0.332788027134913,0.34792830062478,0.375685556958283,0.26019617490607,0.402028950403749,0.320273150073808,0.347218440443808,0.390710048114965,0.32079865514723,0.361590641104404,0.341394494736792,0.376279555512861,0.366727059750679,0.341726865131529,0.3524157973582,0.288635948666907,0.344901761403533,0.303540308112996,0.318234270914376,0.33013561773095,0.344870266189275,0.31,0.335061034765698,0.281106441833898];
+
+const commonOptions = {
+  responsive: true,
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    legend: {
+      position: 'top',
+      labels: { usePointStyle: true, boxWidth: 8, padding: 16, font: { size: 12 } }
+    },
+    tooltip: {
+      callbacks: {
+        label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(3)}`
+      }
+    }
+  },
+  scales: {
+    x: { grid: { display: false } },
+    y: {
+      beginAtZero: true,
+      title: { display: true, text: 'Tasso per 100.000', font: { size: 12 } },
+      grid: { color: '#eeeeee' }
+    }
+  }
+};
+
+new Chart(document.getElementById('chartMaschi'), {
+  type: 'line',
+  data: {
+    labels: anni,
+    datasets: [
+      {
+        label: 'Tasso partner/ex partner',
+        data: maschiPartner,
+        borderColor: '#1565c0',
+        backgroundColor: 'rgba(21,101,192,0.12)',
+        borderWidth: 2,
+        pointRadius: 3,
+        tension: 0.25,
+        fill: false
+      },
+      {
+        label: 'Tasso intimo familiare',
+        data: maschiIntimo,
+        borderColor: '#90caf9',
+        backgroundColor: 'rgba(144,202,249,0.12)',
+        borderWidth: 2,
+        pointRadius: 3,
+        tension: 0.25,
+        fill: false
+      }
+    ]
+  },
+  options: commonOptions
+});
+
+new Chart(document.getElementById('chartFemmine'), {
+  type: 'line',
+  data: {
+    labels: anni,
+    datasets: [
+      {
+        label: 'Tasso partner/ex partner',
+        data: femminePartner,
+        borderColor: '#c2185b',
+        backgroundColor: 'rgba(194,24,91,0.12)',
+        borderWidth: 2,
+        pointRadius: 3,
+        tension: 0.25,
+        fill: false
+      },
+      {
+        label: 'Tasso intimo familiare',
+        data: femmineIntimo,
+        borderColor: '#f48fb1',
+        backgroundColor: 'rgba(244,143,177,0.12)',
+        borderWidth: 2,
+        pointRadius: 3,
+        tension: 0.25,
+        fill: false
+      }
+    ]
+  },
+  options: commonOptions
+});
+</script>
+
+</body>
+</html>
